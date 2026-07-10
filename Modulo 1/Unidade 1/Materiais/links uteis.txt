@@ -1,0 +1,11 @@
+Agile vs cascate:
+
+https://www.alura.com.br/artigos/metodologia-agil-e-modelo-cascata
+
+Conceitos:
+
+https://aws.amazon.com/devops/what-is-devops/
+
+https://www.redhat.com/en/topics/devops/what-is-ci-cd
+
+https://www.atlassian.com/devops
