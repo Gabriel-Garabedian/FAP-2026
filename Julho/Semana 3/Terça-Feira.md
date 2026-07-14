@@ -19,7 +19,11 @@
 - Desafios em Redes, Segurança e Observabilidade
 - Decisão: SOA versus Microsserviços
 
+**O que teve Hioje**
+
+-Apresentação do trabalho de Planejamento de Sprint
+
 **Dificuldades:**
-- 
+- Extrema dificultade em apresentar, sei o asusnto mas não consigo aprentar, travo na hora e nao consigo fazer uma apresentção digina 
 
 ---
