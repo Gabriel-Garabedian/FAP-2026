@@ -1,0 +1,192 @@
+name: Aprendizado Repositorio CI  # Essa linha aqui apenas define o nome que aparecerá na aba Actions do GitHub.
+
+on:  # O on significa que em quais eventos essa pipeline deve ser executada
+  push:   # Executa a pipeline quando um git push é enviado ao GitHub
+    branches:   # Restringe a execução apenas para as branches utilizadas no Git Flow
+      - main
+      - develop
+      - "feature/**"
+
+  pull_request: # Executa a pipeline quando um Pull Request é aberto ou atualizado
+    branches:  # Monitora Pull Requests destinados às branches principais do projeto
+      - main
+      - develop
+      - "feature/**"
+
+  workflow_dispatch:   # Permite executar a pipeline manualmente pela aba Actions, útil para testes e validações
+
+  schedule:    # Executa a pipeline automaticamente em horários programados
+
+    - cron: '0 8 * * 1'  # Segunda-feira às 08:00 UTC. O cron possui 5 campos: minuto, hora, dia do mês, mês e dia da semana
+
+  release:  # Executa a pipeline quando uma nova Release é publicada
+    types:  
+      - published   # A pipeline será executada somente quando a Release for publicada.
+
+jobs: # é um conjunto de tarefas.
+
+  # ============================================================
+  # JOB 1 - Informações do Repositório
+ # Escolhi esse Job para exibir informações importantes da execução,
+  # facilitando identificar quem executou a pipeline e em qual branch.
+  # ============================================================
+  informacoes-repositorio: # Nome do job
+    runs-on: ubuntu-latest  # Define o sistema operacional que será utilizado para executar esse job.
+
+    steps:  # Define as etapas que serão executadas nesse job.
+      - name: Checkout do repositorio  # Nome da etapa
+        uses: actions/checkout@v4  # Utiliza a Action oficial do GitHub para baixar o repositório para o runner.
+
+      - name: Exibir informações do repositório
+      
+        run: | # Executa comandos diretamente na máquina virtual.
+          echo "====================================="
+          echo "📚 Learning Repository CI"
+          echo "====================================="
+          echo "👤 Autor: ${{ github.actor }}"
+          echo "📂 Repositório: ${{ github.repository }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo "🚀 Evento: ${{ github.event_name }}"
+          echo "🔑 Commit: ${{ github.sha }}"
+
+ # ============================================================
+  # JOB 2 - Verificar Git Flow
+  # Esse Job verifica se a branch utilizada segue o padrão do Git Flow.
+  # Essa organização facilita a identificação do fluxo de desenvolvimento utilizado.
+ # ============================================================
+
+  verificar-gitflow:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      - name: Verificar branch
+        run: |
+
+          BRANCH="${{ github.ref_name }}"
+
+          echo "====================================="
+          echo "🌿 Git Flow Check"
+          echo "====================================="
+            # Analisa o nome da branch atual para verificar em qual categoria ela se encaixa (encontrei pesquisando e achei mais facil de usar).
+          case "$BRANCH" in
+
+            main)
+              echo "✔ Branch principal"
+              ;;
+
+            develop)
+              echo "✔ Branch de desenvolvimento"
+              ;;
+
+            feature/*)
+              echo "✔ Branch Feature"
+              ;;
+
+            *)
+              echo "⚠ Branch fora do padrão Git Flow"
+              ;;
+
+          esac
+
+ # ============================================================
+  # JOB 3 - Estatísticas do Repositório
+  # Esse Job apresenta algumas estatísticas simples do repositório,
+  # mostrando informações úteis sobre sua estrutura.
+ # ============================================================
+  estatisticas-repositorio:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Faz o download do repositório para o runner
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      # Conta diretórios, arquivos Markdown e arquivos totais
+      - name: Exibir estatísticas do repositório
+        run: |
+          # As estatísticas são armazenadas em variáveis para deixar
+          # o script mais organizado e facilitar futuras alterações.
+          # Conta todos os diretórios do projeto
+          DIRECTORIES=$(find . -type d | wc -l)
+
+          # Conta todos os arquivos Markdown (.md)
+          MARKDOWN_FILES=$(find . -name "*.md" | wc -l)
+
+          # Conta todos os arquivos do projeto
+          TOTAL_FILES=$(find . -type f | wc -l)
+
+          echo "====================================="
+          echo "📊 Estatísticas do Repositório"
+          echo "====================================="
+
+          echo "📁 Diretórios............. $DIRECTORIES"
+          echo "📄 Arquivos Markdown...... $MARKDOWN_FILES"
+          echo "📦 Total de Arquivos...... $TOTAL_FILES"
+
+          echo "====================================="
+
+
+ # ============================================================
+  # JOB 4 - Informações do Runner
+  # Esse Job exibe informações do ambiente fornecido pelo GitHub,
+  # ajudando a entender onde a pipeline está sendo executada.
+ # ============================================================
+  informacoes-runner:
+
+    # Executa em uma máquina Ubuntu fornecida pelo GitHub
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Faz o download do repositório para o runner
+      - name: Checkout do repositório
+        uses: actions/checkout@v4
+
+      # Exibe informações do ambiente de execução
+      - name: Exibir informações do runner
+        run: |
+
+          echo "====================================="
+          echo "🖥 Informações do Runner"
+          echo "====================================="
+
+          echo "💻 Sistema Operacional:"
+          uname -a # Exibe informações do sistema operacional da máquina virtual.
+
+          echo ""
+
+          echo "🔧 Versão do Git:"
+          git --version
+
+          echo ""
+
+          echo "📂 Diretório Atual:"
+          pwd # Mostra o diretório atual onde a pipeline está sendo executada.
+
+          echo ""
+
+          echo "📁 Arquivos do diretório:"
+          ls # Lista os arquivos disponíveis no diretório atual.
+
+          echo "====================================="
+
+                    
+                
+
+                
+              
+
+              
+
+            
+
+         
+
+
